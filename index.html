@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZestOps - Restaurant Operations Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Wrapper -->
+  <div id="app">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="logo-icon">Z</div>
+        <div class="brand-name">ZestOps</div>
+      </div>
+      
+      <div class="header-controls">
+        <div class="live-clock" id="clock-display">12:00:00 PM</div>
+        
+        <div class="role-tag" id="current-role-tag">
+          Role: Manager
+        </div>
+        
+        <!-- Quick Switcher for Testing -->
+        <select id="quick-role-switcher" class="form-input" style="padding: 4px 8px; font-size: 12px; height: 32px; background: var(--bg-tertiary);">
+          <option value="Owner">Owner</option>
+          <option value="Manager" selected>Manager</option>
+          <option value="Captain">Captain / Waiter</option>
+          <option value="Kitchen Staff">Kitchen Staff</option>
+          <option value="Cashier">Cashier</option>
+          <option value="Delivery Staff">Delivery Staff</option>
+          <option value="Customer">Customer (Table QR)</option>
+        </select>
+        
+        <button class="notification-bell" id="bell-btn" title="Staff Assistance Calls">
+          🔔
+          <span class="bell-badge" id="bell-count" style="display: none;">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="main-sidebar">
+      <ul class="nav-links" id="sidebar-menu">
+        <!-- Will be populated dynamically by app.js based on role permissions -->
+      </ul>
+      
+      <div class="user-profile-widget" id="user-widget">
+        <div class="user-avatar" id="widget-avatar">M</div>
+        <div class="user-info">
+          <div class="user-name" id="widget-name">Sarah</div>
+          <div class="user-role-label" id="widget-role">Manager</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- View Content Viewport -->
+    <main class="app-content" id="main-content-viewport">
+      <div id="active-screen-outlet" class="screen-container">
+        <!-- Rendered component templates will go here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared Modal Container -->
+  <div class="modal-overlay" id="global-modal" style="display: none;">
+    <div class="modal-content" id="global-modal-content">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <!-- Beep/Alert Audio Synthesizer -->
+  <script>
+    window.playNotificationSound = function(frequency = 520, duration = 0.15, type = 'sine') {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
+        
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + duration);
+      } catch (err) {
+        console.warn('Audio Context sound blocked or not supported yet.', err);
+      }
+    };
+  </script>
+
+  <!-- ES6 App bootstrap -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
