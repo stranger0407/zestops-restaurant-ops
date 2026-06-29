@@ -82,27 +82,6 @@ export default {
         btn.addEventListener('click', () => {
           const orderId = btn.getAttribute('data-order-id');
           db.updateAggregatorStatus(orderId, 'preparing', { riderName: 'Rider Dave', phone: '+91 99999 88888', eta: '10 mins' });
-          
-          // Generate active Kitchen Ticket (KOT) automatically for aggregator orders
-          const order = data.aggregators.find(a => a.id === orderId);
-          if (order) {
-            const kotNum = data.kotCounter++;
-            const newKOT = {
-              id: 'KOT_' + kotNum + '_' + Date.now(),
-              kotNumber: kotNum,
-              orderId: order.id,
-              tableNumber: order.platform.toUpperCase(),
-              station: 'Grill & Fry', // Default aggregator KOT routing
-              items: order.items.map(i => ({ name: i.name, quantity: i.quantity, modifications: i.modifications || [] })),
-              status: 'preparing',
-              priority: 'high',
-              createdAt: new Date().toISOString(),
-              timestamp: new Date().toLocaleTimeString()
-            };
-            data.kots.push(newKOT);
-            db.save(data);
-          }
-          
           alert('Delivery order accepted! KOT dispatched to Grill Station.');
           renderFeed();
         });

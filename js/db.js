@@ -673,12 +673,31 @@ class DB {
     const data = this.getData();
     const agg = data.aggregators.find(a => a.id === aggId);
     if (agg) {
+      const oldStatus = agg.status;
       agg.status = status;
       if (riderDetails.name) agg.riderName = riderDetails.name;
       if (riderDetails.phone) agg.riderPhone = riderDetails.phone;
       if (riderDetails.eta) agg.eta = riderDetails.eta;
       
       this.addLog('Delivery', `Aggregator Order #${agg.orderNumber} status: ${status}`);
+      
+      // Auto-generate KOT when accepting order
+      if (status === 'preparing' && oldStatus === 'incoming') {
+        const kotNum = data.kotCounter++;
+        const newKOT = {
+          id: 'KOT_' + kotNum + '_' + Date.now(),
+          kotNumber: kotNum,
+          orderId: agg.id,
+          tableNumber: agg.platform.toUpperCase(),
+          station: 'Grill & Fry', // Default aggregator KOT routing
+          items: agg.items.map(i => ({ name: i.name, quantity: i.quantity, modifications: i.modifications || [] })),
+          status: 'preparing',
+          priority: 'high',
+          createdAt: new Date().toISOString(),
+          timestamp: new Date().toLocaleTimeString()
+        };
+        data.kots.push(newKOT);
+      }
       
       // Auto-archive or log completed ones into salesHistory
       if (status === 'delivered') {
