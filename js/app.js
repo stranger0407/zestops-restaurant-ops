@@ -17,6 +17,7 @@ import sandboxScreen from './components/sandbox.js';
 let currentUser = { name: 'Sarah (Manager)', role: 'Manager', username: 'manager' };
 let currentRoute = '#dashboard';
 let routeParams = {};
+let isSidebarCollapsed = window.innerWidth <= 768;
 
 const ROUTES = {
   '#login': loginScreen,
@@ -38,6 +39,7 @@ function init() {
   setupRoleSwitcher();
   setupNotificationBell();
   setupSimulationLoop();
+  setupMobileMenu();
   
   // Listen to hash routing changes
   window.addEventListener('hashchange', handleRouting);
@@ -60,6 +62,16 @@ function setupClock() {
       const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       clockEl.textContent = timeStr;
     }, 1000);
+  }
+}
+
+function setupMobileMenu() {
+  const mobileMenuBtn = document.getElementById('btn-toggle-menu-mobile');
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+      isSidebarCollapsed = !isSidebarCollapsed;
+      document.getElementById('app').classList.toggle('sidebar-collapsed', isSidebarCollapsed);
+    });
   }
 }
 
@@ -191,6 +203,13 @@ function handleRouting() {
       appContent.style.marginTop = 'var(--header-height)';
       appContent.style.padding = '24px';
     }
+  }
+
+  // Auto-collapse sidebar on mobile after clicking a link
+  if (window.innerWidth <= 768) {
+    isSidebarCollapsed = true;
+    const appContainer = document.getElementById('app');
+    if (appContainer) appContainer.classList.add('sidebar-collapsed');
   }
 
   updateSidebarLinks();
