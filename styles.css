@@ -1471,3 +1471,88 @@ a {
   gap: 10px;
 }
 
+/* Mobile Responsiveness & Hamburger Menu Styles */
+@media (max-width: 768px) {
+  #btn-toggle-menu-mobile {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .app-sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.4);
+    z-index: 150;
+  }
+  
+  /* When sidebar is NOT collapsed, it should slide in */
+  #app:not(.sidebar-collapsed) .app-sidebar {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .app-content {
+    margin-left: 0 !important;
+    width: 100vw !important;
+    padding: 16px !important;
+  }
+  
+  /* Sandbox Grid layout overrides */
+  .sandbox-viewports-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .sandbox-viewport {
+    height: 580px !important;
+  }
+  
+  /* Tables floor grid overrides */
+  .tables-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 12px !important;
+  }
+  
+  .table-card {
+    min-height: 150px !important;
+    padding: 12px !important;
+  }
+  
+  .table-card-num {
+    font-size: 24px !important;
+  }
+
+  /* Order Entry panel overrides */
+  .order-entry-layout {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .order-cart-panel {
+    position: static !important;
+    height: auto !important;
+    margin-top: 20px;
+  }
+
+  /* Billing Screen overrides */
+  .billing-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Dashboard Screen overrides */
+  .dashboard-details-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Reports Screen overrides */
+  .report-row-summary {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .report-details-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
