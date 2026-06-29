@@ -3,10 +3,11 @@ import db from '../db.js';
 
 export default {
   render(container) {
-    const data = db.getData();
+    let data = db.getData();
     let selectedStation = 'All';
 
     const renderKOTs = () => {
+      data = db.getData();
       // Find active KOTs (preparing or ready)
       const activeKOTs = data.kots.filter(k => k.status === 'preparing' || k.status === 'ready');
       

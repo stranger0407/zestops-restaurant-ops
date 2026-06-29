@@ -3,7 +3,7 @@ import db, { TAX_RATE, SERVICE_CHARGE_RATE } from '../db.js';
 
 export default {
   render(container, routerNavigate, tableId = null) {
-    const data = db.getData();
+    let data = db.getData();
     
     // Ensure tableId is valid, default to first occupied or open table
     if (!tableId) {
@@ -11,8 +11,8 @@ export default {
       tableId = activeTable.id;
     }
 
-    const table = data.tables.find(t => t.id === tableId);
-    const order = data.orders.find(o => o.tableId === tableId && o.status !== 'settled');
+    let table = data.tables.find(t => t.id === tableId);
+    let order = data.orders.find(o => o.tableId === tableId && o.status !== 'settled');
 
     // Split Billing states
     let activeSplitTab = 'full'; // 'full', 'person', 'item', 'custom'
@@ -40,6 +40,10 @@ export default {
     };
 
     const renderBillingViews = () => {
+      data = db.getData();
+      table = data.tables.find(t => t.id === tableId);
+      order = data.orders.find(o => o.tableId === tableId && o.status !== 'settled');
+
       if (!order || order.items.length === 0) {
         container.querySelector('#billing-outlet').innerHTML = `
           <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-secondary);">
